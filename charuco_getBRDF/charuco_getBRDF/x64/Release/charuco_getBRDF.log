@@ -1,0 +1,9 @@
+﻿  estimationData.cpp
+estimationData.cpp(210): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+  コード生成しています。
+  46 of 683 functions ( 6.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    5 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  charuco_getBRDF.vcxproj -> C:\Users\otani\Desktop\Visual Studio 2015\Projects\charuco_getBRDF\x64\Release\charuco_getBRDF.exe
+  charuco_getBRDF.vcxproj -> C:\Users\otani\Desktop\Visual Studio 2015\Projects\charuco_getBRDF\x64\Release\charuco_getBRDF.pdb (Full PDB)
