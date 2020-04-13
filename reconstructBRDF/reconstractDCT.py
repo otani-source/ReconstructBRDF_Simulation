@@ -8,39 +8,39 @@ import numpy as np
 from numba import jit
 from scipy.fftpack import dct
 
-
-dirPath = 'Desktop/Graduation_result/'      # このファイルの場所
+dirPath = op.dirname(__file__)      # このファイルの場所
 filename = 'gold-metallic-paint_40p_17m18s'  # 読み込むデータのファイル名
 
 K = 5  # DCTを行う範囲の分割数
 
 
 def main():
-    print(__file__)
-    yinVec = read2dBRDF(dirPath + '2dbrdf/' +
+    # 部分的なBRDF
+    yinVec = read2dBRDF(dirPath + '/2dbrdf/' +
                         filename + '.brdf2').reshape(-1, 3)
+    # オリジナルBRDF
     org_data = read2dBRDF(
-        dirPath + '2dbrdf/gold-metallic-paint.brdf2')
+        dirPath + '/2dbrdf/gold-metallic-paint.brdf2')
     start = time()
-    N = np.sqrt(yinVec.shape[0]).astype('u1')
+    N = np.sqrt(yinVec.shape[0]).astype('u1')       # マップの1辺のピクセル数
     ind = yinVec >= 0
     m = np.sum(ind) // 3
 
-    y = yinVec[ind].reshape(m, 3)
-    A = createA(m, N, ind[:, 0])
-    Wdct = createBDM(N)
+    y = yinVec[ind].reshape(m, 3)                   # 観測データ
+    A = createA(m, N, ind[:, 0])                    # 観測行列
+    Wdct = createBDM(N)                             # DCT行列
 
-    Wx = reconstruct(y, A.dot(Wdct.T), N)
-    x = Wdct.T.dot(Wx).reshape(N, N, 3)
+    Wx = reconstruct(y, A.dot(Wdct.T), N)           # スパースBRDFの推定
+    x = Wdct.T.dot(Wx).reshape(N, N, 3)             # 逆DCTで密なBRDFに変換
     y2d = yinVec.reshape(N, N, 3)
 
+    # 結果表示
     makefigure(131, y2d, 'observation data')
     makefigure(132, x, 'estimation data')
     makefigure(133, org_data.reshape(N, N, 3), 'original data')
 
     t = time() - start
-    print(rmse(y2d, y2d))
-    print(439.89 + t, '[sec]')
+    print(rmse(y2d, x))                             # RMSEの表示
     plt.show()
 
 
@@ -77,7 +77,7 @@ def createBDM(N):
     return bdm.repeat(N, 0).repeat(N, 1) * np.tile(bdm, [N, N])
 
 
-# 圧縮センシングによる推定
+# 圧縮センシングによるスパースBRDFの推定
 @jit('f8[:, :](f8[:, :], f8[:, :], u1)')
 def reconstruct(y, L, N):
     out = np.zeros([N**2, 3])

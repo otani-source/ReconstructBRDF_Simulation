@@ -1,2 +1,6 @@
 # ReconstructBRDF_Simulation
-卒論成果
+卒論で製作したプログラムです。
+charuco_getBRDF…マーカーを用いてカメラ姿勢を計測し，BRDFの計測を模範するプログラム
+reconstructBRDF…上記で計測した部分的なBRDFから，密なBRDFを推定するプログラム
+
+※charuco_getBRDFはカメラとChArUcoマーカーがないと動きませんが、reconstructBRDFの方はそのまま動かすことができるようにしてあります。
